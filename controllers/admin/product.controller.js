@@ -34,8 +34,17 @@ module.exports.index = async (req, res) => {
 
     // end pagination
 
+    const sort = {}
+    if (req.query.sortKey && req.query.sortValue){
+        sort[req.query.sortKey] = req.query.sortValue;
+    }
+    else{
+        sort.position = 'desc';
+    }
+
+
     const products = await Product.find(find)
-        .sort({position: 'desc'})
+        .sort(sort)
         .limit(objectPagination.limitItems)
         .skip(objectPagination.skip);
 
@@ -175,9 +184,7 @@ module.exports.editPatch = async (req, res) => {
         req.body.position = parseInt(req.body.position);
     }
 
-    if (req.file){
-        req.body.thumbnail = `/uploads/${req.file.filename}`;
-    }
+
     try{
         await Product.updateOne({_id: req.params.id}, req.body);
         req.flash('success', 'Updated successfully!')
