@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const database = require('./config/database');
@@ -13,6 +14,9 @@ const multer = require('multer');
 database.connect();
 const app = express();
 const port = process.env.PORT;
+
+//tinymce
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 
 //override post method to other method
 app.use(methodOverride('_method'));
